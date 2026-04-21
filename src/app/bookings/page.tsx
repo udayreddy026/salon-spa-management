@@ -1,198 +1,93 @@
-"use client";
-
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Plus, Calendar, Clock, User, Scissors, Edit, Trash2, Save } from "lucide-react";
-
-interface Booking {
-  id: number;
-  customer: string;
-  service: string;
-  staff: string;
-  date: string;
-  time: string;
-  duration: string;
-  status: "Confirmed" | "Pending" | "Completed" | "Cancelled";
-}
-
-const initialBookings: Booking[] = [
-  {
-    id: 1,
-    customer: "John Doe",
-    service: "Hair Cut & Style",
-    staff: "Sarah Johnson",
-    date: "2024-03-25",
-    time: "2:00 PM",
-    duration: "45 min",
-    status: "Confirmed",
-  },
-  {
-    id: 2,
-    customer: "Jane Smith",
-    service: "Facial Treatment",
-    staff: "Mike Wilson",
-    date: "2024-03-26",
-    time: "10:00 AM",
-    duration: "60 min",
-    status: "Pending",
-  },
-  {
-    id: 3,
-    customer: "Alice Johnson",
-    service: "Manicure",
-    staff: "Emma Davis",
-    date: "2024-03-26",
-    time: "3:00 PM",
-    duration: "30 min",
-    status: "Completed",
-  },
-  {
-    id: 4,
-    customer: "Bob Brown",
-    service: "Hair Coloring",
-    staff: "Sarah Johnson",
-    date: "2024-03-27",
-    time: "9:00 AM",
-    duration: "120 min",
-    status: "Confirmed",
-  },
-];
-
-const services = ["Hair Cut & Style", "Hair Coloring", "Facial Treatment", "Manicure", "Massage"];
-const staff = ["Sarah Johnson", "Mike Wilson", "Emma Davis"];
-
-export default function Bookings() {
-  const [bookings, setBookings] = useState<Booking[]>(initialBookings);
-  const [editingBooking, setEditingBooking] = useState<Booking | null>(null);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [newBooking, setNewBooking] = useState<Partial<Booking>>({
-    customer: "",
-    service: "",
-    staff: "",
-    date: "",
-    time: "",
-    duration: "",
-    status: "Pending",
-  });
-
-  const handleEdit = (booking: Booking) => {
-    setEditingBooking({ ...booking });
-    setIsEditDialogOpen(true);
-  };
-
-  const handleSaveEdit = () => {
-    if (editingBooking) {
-      setBookings(bookings.map(b => b.id === editingBooking.id ? editingBooking : b));
-      setIsEditDialogOpen(false);
-      setEditingBooking(null);
-    }
-  };
-
-  const handleDelete = (id: number) => {
-    setBookings(bookings.filter(b => b.id !== id));
-  };
-
-  const handleStatusChange = (id: number, status: Booking["status"]) => {
-    setBookings(bookings.map(b => b.id === id ? { ...b, status } : b));
-  };
-
-  const handleAddBooking = () => {
-    if (newBooking.customer && newBooking.service && newBooking.staff && newBooking.date && newBooking.time && newBooking.duration) {
-      const booking: Booking = {
-        id: Math.max(...bookings.map(b => b.id)) + 1,
-        customer: newBooking.customer,
-        service: newBooking.service,
-        staff: newBooking.staff,
-        date: newBooking.date,
-        time: newBooking.time,
-        duration: newBooking.duration,
-        status: newBooking.status as Booking["status"],
-      };
-      setBookings([...bookings, booking]);
-      setNewBooking({
-        customer: "",
-        service: "",
-        staff: "",
-        date: "",
-        time: "",
-        duration: "",
-        status: "Pending",
-      });
-      setIsAddDialogOpen(false);
-    }
-  };
-
-  return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Bookings</h1>
-        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              New Booking
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px]">
-            <DialogHeader>
-              <DialogTitle>Add New Booking</DialogTitle>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="customer" className="text-right">
-                  Customer
-                </Label>
-                <Input
-                  id="customer"
-                  value={newBooking.customer}
-                  onChange={(e) => setNewBooking({ ...newBooking, customer: e.target.value })}
-                  className="col-span-3"
-                  placeholder="Customer name"
-                />
+        <CardContent>
+          <div className="overflow-x-auto">
+            <div className="min-w-full divide-y">
+              <div className="grid grid-cols-12 gap-4 items-center py-2 px-3 text-xs font-semibold text-muted-foreground">
+                <div className="col-span-2">Date</div>
+                <div className="col-span-2">Time</div>
+                <div className="col-span-3">Customer</div>
+                <div className="col-span-2">Service</div>
+                <div className="col-span-1">Staff</div>
+                <div className="col-span-1">Status</div>
+                <div className="col-span-1 text-right">Actions</div>
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="service" className="text-right">
-                  Service
-                </Label>
-                <Select
-                  value={newBooking.service}
-                  onValueChange={(value) => setNewBooking({ ...newBooking, service: value })}
-                >
-                  <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select service" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {services.map((service) => (
-                      <SelectItem key={service} value={service}>
-                        {service}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="staff" className="text-right">
-                  Staff
-                </Label>
-                <Select
-                  value={newBooking.staff}
-                  onValueChange={(value) => setNewBooking({ ...newBooking, staff: value })}
-                >
-                  <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select staff" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {staff.map((member) => (
-                      <SelectItem key={member} value={member}>
-                        {member}
+              {bookings.map((booking) => (
+                <div key={booking.id} className="grid grid-cols-12 gap-4 items-center py-3 px-3 hover:bg-slate-50 dark:hover:bg-slate-900 rounded"> 
+                  <div className="col-span-2 text-sm font-medium text-gray-800 dark:text-gray-100">{booking.date}</div>
+                  <div className="col-span-2 text-sm text-gray-700 dark:text-gray-300">{booking.time}</div>
+                  <div className="col-span-3 flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-xs font-bold">{booking.customer.split(' ').map(n=>n[0]).slice(0,2).join('')}</div>
+                    <div className="truncate">
+                      <div className="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">{booking.customer}</div>
+                      <div className="text-xs text-muted-foreground truncate">{booking.duration}</div>
+                    </div>
+                  </div>
+                  <div className="col-span-2 text-sm text-gray-700 dark:text-gray-300 truncate">{booking.service}</div>
+                  <div className="col-span-1 text-sm text-gray-700 dark:text-gray-300">{booking.staff.split(' ').map(n=>n[0]).slice(0,2).join('')}</div>
+                  <div className="col-span-1">
+                    {booking.status === 'Confirmed' && <Badge className="bg-green-100 text-green-800">Confirmed</Badge>}
+                    {booking.status === 'Pending' && <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>}
+                    {booking.status === 'Completed' && <Badge className="bg-sky-100 text-sky-800">Completed</Badge>}
+                    {booking.status === 'Cancelled' && <Badge className="bg-rose-100 text-rose-800">Cancelled</Badge>}
+                  </div>
+                  <div className="col-span-1 text-right">
+                    <div className="inline-flex items-center space-x-2">
+                      <Dialog open={isEditDialogOpen && editingBooking?.id === booking.id} onOpenChange={(open) => {
+                        if (!open) {
+                          setIsEditDialogOpen(false);
+                          setEditingBooking(null);
+                        }
+                      }}>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm" onClick={() => handleEdit(booking)}>
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[500px]">
+                          <DialogHeader>
+                            <DialogTitle>Edit Booking</DialogTitle>
+                          </DialogHeader>
+                          {editingBooking && (
+                            <div className="grid gap-4 py-4">
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="edit-customer" className="text-right">Customer</Label>
+                                <Input id="edit-customer" value={editingBooking.customer} onChange={(e) => setEditingBooking({ ...editingBooking, customer: e.target.value })} className="col-span-3" />
+                              </div>
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="edit-service" className="text-right">Service</Label>
+                                <Select value={editingBooking.service} onValueChange={(value) => setEditingBooking({ ...editingBooking, service: value })}>
+                                  <SelectTrigger className="col-span-3"><SelectValue /></SelectTrigger>
+                                  <SelectContent>{services.map((service) => (<SelectItem key={service} value={service}>{service}</SelectItem>))}</SelectContent>
+                                </Select>
+                              </div>
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="edit-date" className="text-right">Date</Label>
+                                <Input id="edit-date" type="date" value={editingBooking.date} onChange={(e) => setEditingBooking({ ...editingBooking, date: e.target.value })} className="col-span-3" />
+                              </div>
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="edit-time" className="text-right">Time</Label>
+                                <Input id="edit-time" type="time" value={editingBooking.time} onChange={(e) => setEditingBooking({ ...editingBooking, time: e.target.value })} className="col-span-3" />
+                              </div>
+                            </div>
+                          )}
+                          <DialogFooter>
+                            <Button onClick={handleSaveEdit}><Save className="h-4 w-4 mr-2" />Save Changes</Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="ghost" size="sm" onClick={() => handleDelete(booking.id)}>
+                            <Trash2 className="h-4 w-4 text-rose-600" />
+                          </Button>
+                        </AlertDialogTrigger>
+                      </AlertDialog>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </CardContent>
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -260,30 +155,30 @@ export default function Bookings() {
           </DialogContent>
         </Dialog>
       </div>
-      <Card>
+      <Card className="border-0 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 hover:shadow-xl transition-all duration-300">
         <CardHeader>
-          <CardTitle>Upcoming Bookings</CardTitle>
+          <CardTitle className="text-lg font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">Upcoming Bookings</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {bookings.map((booking) => (
-              <div key={booking.id} className="flex flex-col md:flex-row md:items-center justify-between p-4 border rounded-lg gap-3 md:gap-0">
+              <div key={booking.id} className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950 dark:to-cyan-950 border border-blue-200 dark:border-blue-800 rounded-lg hover:shadow-md transition-all gap-3 md:gap-0">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 flex-shrink-0 min-w-0">
                   <div className="flex items-center space-x-2 min-w-0">
-                    <Calendar className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                    <span className="font-medium truncate">{booking.date}</span>
+                    <Calendar className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                    <span className="font-medium truncate text-gray-800 dark:text-gray-100">{booking.date}</span>
                   </div>
                   <div className="flex items-center space-x-2 min-w-0">
-                    <Clock className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                    <span className="truncate">{booking.time} ({booking.duration})</span>
+                    <Clock className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                    <span className="truncate text-gray-700 dark:text-gray-300">{booking.time} ({booking.duration})</span>
                   </div>
                   <div className="flex items-center space-x-2 min-w-0">
-                    <User className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                    <span className="truncate">{booking.customer}</span>
+                    <User className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                    <span className="truncate text-gray-700 dark:text-gray-300">{booking.customer}</span>
                   </div>
                   <div className="flex items-center space-x-2 min-w-0">
-                    <Scissors className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                    <span className="truncate">{booking.service}</span>
+                    <Scissors className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                    <span className="truncate text-gray-700 dark:text-gray-300">{booking.service}</span>
                   </div>
                   <div className="text-sm text-muted-foreground min-w-0 truncate">with {booking.staff}</div>
                 </div>
@@ -292,7 +187,7 @@ export default function Bookings() {
                     value={booking.status}
                     onValueChange={(value: Booking["status"]) => handleStatusChange(booking.id, value)}
                   >
-                    <SelectTrigger className="w-32">
+                    <SelectTrigger className="w-32 bg-white dark:bg-slate-800">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -310,7 +205,7 @@ export default function Bookings() {
                       }
                     }}>
                       <DialogTrigger asChild>
-                        <Button variant="outline" size="sm" onClick={() => handleEdit(booking)}>
+                        <Button variant="outline" size="sm" className="hover:bg-blue-100 dark:hover:bg-blue-900" onClick={() => handleEdit(booking)}>
                           <Edit className="h-4 w-4" />
                         </Button>
                       </DialogTrigger>
