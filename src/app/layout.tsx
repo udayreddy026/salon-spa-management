@@ -28,10 +28,12 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      <body className="h-screen flex bg-slate-900 overflow-hidden">
         <Sidebar />
-        <main className="flex-1 bg-gradient-to-br from-white/80 via-white/60 to-purple-50/30 dark:from-slate-900/80 dark:via-slate-800/60 dark:to-slate-900/30 backdrop-blur-sm p-6">
-          {children}
+        <main className="flex-1 bg-slate-900 overflow-auto">
+          <div className="p-6 min-h-full">
+            {children}
+          </div>
         </main>
       </body>
     </html>
