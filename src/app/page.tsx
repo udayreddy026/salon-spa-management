@@ -181,7 +181,7 @@ export default function Overview() {
                     boxShadow: '0 8px 16px rgba(0, 0, 0, 0.3)'
                   }}
                   labelStyle={{ color: '#e2e8f0' }}
-                  formatter={(value) => [`$${value.toLocaleString()}`, 'Revenue']}
+                  formatter={(value) => [`$${(value ?? 0).toLocaleString()}`, 'Revenue']}
                   cursor={{
                     stroke: 'rgba(168, 85, 247, 0.3)',
                     strokeWidth: 2
@@ -329,7 +329,7 @@ export default function Overview() {
                 }}
                 labelStyle={{ color: '#e2e8f0' }}
                 formatter={(value) => [
-                  `${value} bookings`,
+                  `${value ?? 0} bookings`,
                   'Total'
                 ]}
                 cursor={{
