@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Salon & Spa Management",
+  title: "Salon And Spa Management",
   description: "Manage your salon and spa business efficiently",
 };
 
