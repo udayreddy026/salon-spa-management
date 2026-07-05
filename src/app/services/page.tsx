@@ -62,6 +62,22 @@ const initialServices: Service[] = [
     price: 100,
     status: "Inactive",
   },
+  {
+    id: 6,
+    name: "Pedicure",
+    category: "Nail Services",
+    duration: "45 min",
+    price: 40,
+    status: "Active",
+  },
+  {
+    id: 7,
+    name: "Hair Spa",
+    category: "Hair Services",
+    duration: "60 min",
+    price: 70,
+    status: "Inactive",
+  }
 ];
 
 export default function Services() {
