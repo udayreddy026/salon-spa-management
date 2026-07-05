@@ -14,6 +14,7 @@ import {
   Megaphone,
   ChevronLeft,
   ChevronRight,
+  MessageCircle,
 } from 'lucide-react';
 
 const menuItems = [
@@ -25,6 +26,7 @@ const menuItems = [
   { name: 'Bookings', href: '/bookings', icon: Calendar },
   { name: 'Staff Management', href: '/staff', icon: Users },
   { name: 'Campaigns', href: '/campaigns', icon: Megaphone },
+  { name: 'WhatsApp', href: '/whatsapp', icon: MessageCircle },
 ];
 
 export default function Sidebar() {
